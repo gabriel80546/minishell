@@ -1,8 +1,6 @@
 
-//#include "get_next_line.h"
 #include <fcntl.h>
 #include <stdio.h>
-//#include <string.h>
 #include "libft.h"
 
 #ifndef BUFFER_SIZE
