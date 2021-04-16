@@ -8,33 +8,31 @@
 # define BUFFER_SIZE 32
 #endif
 
-int	main(void)
+int	gnl(void)
 {
-	int fd;
 	char *linha;
-	int i;
 	int retorno;
-	char *file;
 
-	i = 0;
-	file = "run.sh";
-	fd = open(file, O_RDONLY);
-	retorno = 1;
-	while (retorno == 1)
+	get_next_line(0, &linha);
+	write(1, linha, strlen(linha));
+	if (strlen(linha) > 0)
+		write(1, "\n", 1);
+	if (strcmp(linha, "exit") == 0)
 	{
-		retorno = get_next_line(fd, &linha);
-		if (retorno != 1)
+		free(linha);
+		return (1);
+	}
+	free(linha);
+	return (0);
+}
+
+int main(void)
+{
+	while (1)
+	{
+		write(1, "minishell $ ", strlen("minishell $ "));
+		if (gnl() == 1)
 			break;
-		printf("%s(%s:%d): linha[%d] = '%s'(%ld); retorno = %i\n", __FILE__, __func__, __LINE__, i, linha, strlen(linha), retorno);
-		free(linha);
-		i++;
 	}
-	if (retorno != -1)
-	{
-		printf("%s(%s:%d): linha[%d] = '%s'(%ld); retorno = %i\n", __FILE__, __func__, __LINE__, i, linha, strlen(linha), retorno);
-		free(linha);
-	}
-	else
-		printf("%s(%s:%d): get_next_line(\"%s\") retornou -1\n", __FILE__, __func__, __LINE__, file);
 	return (0);
 }
