@@ -1,1 +1,1 @@
-gcc -I gnl gnl/*.c main.c -o main
+gcc -I libft libft/*.c main.c -o main

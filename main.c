@@ -1,8 +1,9 @@
 
-#include "get_next_line.h"
+//#include "get_next_line.h"
 #include <fcntl.h>
 #include <stdio.h>
-#include <string.h>
+//#include <string.h>
+#include "libft.h"
 
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 32
@@ -14,10 +15,10 @@ int	gnl(void)
 	int retorno;
 
 	get_next_line(0, &linha);
-	write(1, linha, strlen(linha));
-	if (strlen(linha) > 0)
+	write(1, linha, ft_strlen(linha));
+	if (ft_strlen(linha) > 0)
 		write(1, "\n", 1);
-	if (strcmp(linha, "exit") == 0)
+	if (ft_strncmp(linha, "exit", ft_strlen("exit")) == 0)
 	{
 		free(linha);
 		return (1);
@@ -30,7 +31,7 @@ int main(void)
 {
 	while (1)
 	{
-		write(1, "minishell $ ", strlen("minishell $ "));
+		write(1, "minishell $ ", ft_strlen("minishell $ "));
 		if (gnl() == 1)
 			break;
 	}

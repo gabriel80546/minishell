@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 #include <stdio.h>
 
 
@@ -20,35 +20,6 @@ static int	ft_min(int a, int b)
 		return (b);
 	else
 		return (a);
-}
-
-static char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*saida;
-	size_t	contador;
-	size_t	s_len;
-	int		alocar;
-
-	if (s == NULL)
-		return ((char *)1);
-	s_len = ft_strlen(s);
-	alocar = ((start >= s_len) ? 1 : ft_min(s_len + 1, len + 1));
-	saida = (char *)malloc(sizeof(char) * alocar);
-	if (saida == NULL)
-		return ((char *)2);
-	if (start > s_len)
-	{
-		*(saida + 0) = '\0';
-		return (saida);
-	}
-	contador = start;
-	while ((contador < (start + len)) && (contador < s_len))
-	{
-		*(saida + (contador - start)) = *((char *)s + contador);
-		contador++;
-	}
-	*(saida + (contador - start)) = '\0';
-	return (saida);
 }
 
 static int	get_next_util(char *vars[3], char *extra1)
