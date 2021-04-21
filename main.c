@@ -37,7 +37,7 @@ int	command_exist(char *cmd)
 	if (stat(cmd, &temp) == -1)
 	{
 		if (ft_strncmp(cmd, "exit", ft_strlen("exit")) != 0)
-			printf("comando '%s' nao encontrado\n", cmd);
+			printf("\033[22;31mcomando\033[0m \033[22;33m'%s'\033[0m \033[22;31mnao encontrado\033[0m\n", cmd);
 		return (0);
 	}
 	else
@@ -93,7 +93,7 @@ int	main(int argc, char **argv, char **envp)
 	argv = argv + 0;
 	while (1)
 	{
-		ft_putstr_fd("minishell $ ", 1);
+		ft_putstr_fd("\033[22;32mminishell $ \033[0m", 1);
 		if (gnl(/*argc, argv, */envp) == 1)
 			break;
 	}
