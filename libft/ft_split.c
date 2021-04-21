@@ -105,13 +105,11 @@ static void	ft_split_set(char **saida, char const *s, char c)
 
 char		**ft_split(char const *s, char c)
 {
-	int		i;
 	int		words;
 	char	**saida;
 
 	if (s == NULL)
 		return (NULL);
-	i = 0;
 	words = ft_split_wc(s, c);
 	saida = (char **)malloc(sizeof(char *) * (words + 1));
 	if (saida == NULL)

@@ -44,42 +44,40 @@ int	command_exist(char *cmd)
 		return (1);
 }
 
-int	parse_line(char *linha, int argc, char **argv, char **envp)
+int	parse_line(char *linha/*, int argc,  char **argv*/, char **envp)
 {
 	char	**args;
 	int		i;
 	pid_t	pid;
 
 	args = ft_split(linha, ' ');
-
+	if (args[0] != NULL)
+	{
+		if (command_exist(args[0]) == 1)
+		{
+			pid = fork();
+			if (pid != 0)
+				wait(NULL);
+			if (pid == 0)
+				execve(args[0], args, envp);
+		}
+	}
 	i = 0;
 	while (args[i])
 	{
-		if (i == 0)
-		{
-
-			if (command_exist(args[i]) == 1)
-			{
-				pid = fork();
-				if (pid != 0)
-					wait(NULL);
-				if (pid == 0)
-					execve(args[i], args, envp);
-			}
-		}
 		free(args[i]);
 		i++;
 	}
 	free(args);
+	return (0);
 }
 
-int	gnl(int argc, char **argv, char **envp)
+int	gnl(/*int argc, char **argv, */char **envp)
 {
 	char *linha;
-	int retorno;
 
 	get_next_line(0, &linha);
-	parse_line(linha, argc, argv, envp);
+	parse_line(linha/*, argc, argv*/, envp);
 	if (ft_strncmp(linha, "exit", ft_strlen("exit")) == 0)
 	{
 		free(linha);
@@ -91,10 +89,12 @@ int	gnl(int argc, char **argv, char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
+	argc = argc + 0;
+	argv = argv + 0;
 	while (1)
 	{
 		ft_putstr_fd("minishell $ ", 1);
-		if (gnl(argc, argv, envp) == 1)
+		if (gnl(/*argc, argv, */envp) == 1)
 			break;
 	}
 	return (0);
