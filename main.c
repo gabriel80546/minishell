@@ -3,12 +3,49 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <stdio.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <errno.h>
 #include "libft.h"
+#include <stdio.h>
+#include <stdarg.h>
 
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 32
 #endif
+#ifndef DEB
+# define DEB __FILE__, __func__, __LINE__
+#endif
+
+int		say(const char *format, char *file, const char *func, int line, ...)
+{
+	va_list		args;
+	int			saida;
+	static int	counter = 0;
+
+	printf("%05d:%s(%s:%d): ", counter, file, func, line);
+	va_start(args, line);
+	saida = vprintf(format, args);
+	va_end(args);
+	counter++;
+	return (saida);
+}
+
+int	command_exist(char *cmd)
+{
+	struct stat temp;
+	if (stat(cmd, &temp) == -1)
+	{
+		if (ft_strncmp(cmd, "exit", ft_strlen("exit")) != 0)
+			printf("minishell => comando '%s' nao encontrado\n", cmd);
+		return (0);
+	}
+	else
+	{
+		say("temp.st_mode = %d\n", DEB, temp.st_mode);
+		return (1);
+	}
+}
 
 int	parse_line(char *linha, int argc, char **argv, char **envp)
 {
@@ -23,10 +60,15 @@ int	parse_line(char *linha, int argc, char **argv, char **envp)
 	{
 		if (i == 0)
 		{
-			pid = fork();
-			wait(NULL);
-			if (pid == 0)
-				execve(args[i], argv, envp);
+
+			if (command_exist(args[i]) == 1)
+			{
+				pid = fork();
+				if (pid != 0)
+					wait(NULL);
+				if (pid == 0)
+					execve(args[i], argv, envp);
+			}
 		}
 		free(args[i]);
 		i++;
