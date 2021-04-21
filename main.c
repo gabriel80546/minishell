@@ -31,17 +31,49 @@ int		say(const char *format, char *file, const char *func, int line, ...)
 	return (saida);
 }
 
-int	command_exist(char *cmd)
+char	*command_exist(char *cmd, char **envp)
 {
-	struct stat temp;
-	if (stat(cmd, &temp) == -1)
+	struct stat	temp;
+	int			i;
+	char		**paths;
+	char		*con;
+	char		*temp_con;
+	int			flag;
+	char		*saida;
+
+	saida = NULL;
+	i = 0;
+	paths = NULL;
+	flag = 0;
+	if (ft_strncmp(cmd, "exit", ft_strlen("exit")) == 0)
+		return (saida);
+	while (envp[i] != 0)
 	{
-		if (ft_strncmp(cmd, "exit", ft_strlen("exit")) != 0)
-			printf("\033[0mcomando \033[22;33m'%s'\033[0m nao encontrado\n", cmd);
-		return (0);
+		if (ft_strncmp(envp[i], "PATH=", ft_strlen("PATH=")) == 0)
+			paths = ft_split((envp[i] + 5), ':');
+		i++;
 	}
-	else
-		return (1);
+	i = 0;
+	while (paths[i] != 0)
+	{
+		temp_con = ft_strjoin(paths[i], "/");
+		con = ft_strjoin(temp_con, cmd);
+		free(temp_con);
+		if (stat(con, &temp) == -1 && flag == 0)
+			flag = 0;
+		else if (flag == 0)
+		{
+			flag = 1;
+			saida = ft_strdup(con);
+		}
+		free(con);
+		free(paths[i]);
+		i++;
+	}
+	free(paths);
+	if (flag == 0)
+		printf("\033[0mcomando \033[22;33m'%s'\033[0m nao encontrado\n", cmd);
+	return (saida);
 }
 
 int	parse_line(char *linha/*, int argc,  char **argv*/, char **envp)
@@ -49,17 +81,20 @@ int	parse_line(char *linha/*, int argc,  char **argv*/, char **envp)
 	char	**args;
 	int		i;
 	pid_t	pid;
+	char	*cmd;
 
 	args = ft_split(linha, ' ');
 	if (args[0] != NULL)
 	{
-		if (command_exist(args[0]) == 1)
+		cmd = command_exist(args[0], envp);
+		if (cmd != NULL)
 		{
 			pid = fork();
 			if (pid != 0)
 				wait(NULL);
 			if (pid == 0)
-				execve(args[0], args, envp);
+				execve(cmd, args, envp);
+			free(cmd);
 		}
 	}
 	i = 0;
