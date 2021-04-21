@@ -37,14 +37,11 @@ int	command_exist(char *cmd)
 	if (stat(cmd, &temp) == -1)
 	{
 		if (ft_strncmp(cmd, "exit", ft_strlen("exit")) != 0)
-			printf("minishell => comando '%s' nao encontrado\n", cmd);
+			printf("comando '%s' nao encontrado\n", cmd);
 		return (0);
 	}
 	else
-	{
-		say("temp.st_mode = %d\n", DEB, temp.st_mode);
 		return (1);
-	}
 }
 
 int	parse_line(char *linha, int argc, char **argv, char **envp)
@@ -67,7 +64,7 @@ int	parse_line(char *linha, int argc, char **argv, char **envp)
 				if (pid != 0)
 					wait(NULL);
 				if (pid == 0)
-					execve(args[i], argv, envp);
+					execve(args[i], args, envp);
 			}
 		}
 		free(args[i]);
