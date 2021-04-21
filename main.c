@@ -47,6 +47,12 @@ char	*command_exist(char *cmd, char **envp)
 	flag = 0;
 	if (ft_strncmp(cmd, "exit", ft_strlen("exit")) == 0)
 		return (saida);
+	if (stat(cmd, &temp) != -1)
+	{
+		con = ft_strdup(cmd);
+		flag = 0;
+		return (con);
+	}
 	while (envp[i] != 0)
 	{
 		if (ft_strncmp(envp[i], "PATH=", ft_strlen("PATH=")) == 0)
