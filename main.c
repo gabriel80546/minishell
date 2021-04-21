@@ -77,6 +77,7 @@ int	gnl(/*int argc, char **argv, */char **envp)
 	char *linha;
 
 	get_next_line(0, &linha);
+	ft_putstr_fd("\033[0m", 1);
 	parse_line(linha/*, argc, argv*/, envp);
 	if (ft_strncmp(linha, "exit", ft_strlen("exit")) == 0)
 	{
